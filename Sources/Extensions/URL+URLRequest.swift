@@ -8,15 +8,15 @@
 
 import Foundation
 
-enum HTTPMethod: String {
+public enum HTTPMethod: String {
     case get = "GET"
     case post = "POST"
     case put = "PUT"
     case delete = "DELETE"
 }
 
-extension URL {
-    init(baseURL: String, path: String?, params: JSON?) {
+public extension URL {
+    public init(baseURL: String, path: String?, params: JSON?) {
         var components = URLComponents(string: "\(baseURL)\(path ?? "")")!
         
         if let params = params {
@@ -30,15 +30,15 @@ extension URL {
     }
 }
 
-extension URLRequest {
-    init(url: URL, method: HTTPMethod) {
+public extension URLRequest {
+    public init(url: URL, method: HTTPMethod) {
         self.init(url: url)
         
         // set http method
         httpMethod = method.rawValue
     }
     
-    init<T: Encodable>(url: URL, method: HTTPMethod, body: T) throws {
+    public init<T: Encodable>(url: URL, method: HTTPMethod, body: T) throws {
         self.init(url: url, method: method)
         
         switch method {

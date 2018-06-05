@@ -8,20 +8,20 @@
 
 import Foundation
 
-typealias JSON = [String: Any]
+public typealias JSON = [String: Any]
 
-enum APIResult {
+public enum APIResult {
     case success(Data?)
     case failure(Error)
 }
 
-protocol APIConfiguration {
+public protocol APIConfiguration {
     var hostname: String { get }
     var port: Int? { get }
     var credentials: APICredentialStore? { get }
 }
 
-protocol APICredentialStore {
+public protocol APICredentialStore {
     func getUserID() -> Int?
     func setUserID(_ userID: Int?) throws
     func getToken() -> String?
@@ -29,13 +29,12 @@ protocol APICredentialStore {
     func reset() throws
 }
 
-protocol APIClient {
+public protocol APIClient {
     var hostname: String { get }
     var port: Int? { get }
     var basePath: String? { get }
     var credentials: APICredentialStore? { get }
     var session: URLSession { get }
-    var baseURL: String { get }
     
     init(hostname: String, port: Int?, basePath: String?, credentials: APICredentialStore?)
     
@@ -49,17 +48,17 @@ protocol APIClient {
     func processSessionDataTask(data: Data?, response: URLResponse?, error: Error?) -> APIResult
 }
 
-extension APIClient {
-    init(config: APIConfiguration, basePath: String?) {
+public extension APIClient {
+    public init(config: APIConfiguration, basePath: String?) {
         self.init(hostname: config.hostname, port: config.port, basePath: basePath, credentials: config.credentials)
     }
     
-    var baseURL: String {
+    public var baseURL: String {
         return "http://\(hostname):\(port ?? 80)\(basePath != nil ? "/\(basePath!)" : "")"
     }
     
     /// https://stackoverflow.com/questions/29623187/upload-image-with-multipart-form-data-ios-in-swift
-    func uploadMultipart(name: String, filename: String, data: Data, to path: String?, method: HTTPMethod, completion: @escaping (APIResult) -> Void) {
+    public func uploadMultipart(name: String, filename: String, data: Data, to path: String?, method: HTTPMethod, completion: @escaping (APIResult) -> Void) {
         let url = URL(baseURL: baseURL, path: path, params: nil)
         var request = URLRequest(url: url, method: method)
         
@@ -109,7 +108,7 @@ extension APIClient {
         }
     }
     
-    func executeSessionDataTask(request: URLRequest, completion: @escaping (APIResult) -> Void) {
+    public func executeSessionDataTask(request: URLRequest, completion: @escaping (APIResult) -> Void) {
         var request = request
         
         // set bearer authorization header

@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol Service {
+public protocol Service {
     associatedtype PrimaryResource: Decodable
     associatedtype Client: APIClient
     var client: Client { get }
@@ -16,8 +16,8 @@ protocol Service {
     init(config: APIConfiguration)
 }
 
-extension Service {
-    init(config: APIConfiguration) {
+public extension Service {
+    public init(config: APIConfiguration) {
         self.init(hostname: config.hostname, port: config.port ?? 80, credentials: config.credentials)
     }
 }

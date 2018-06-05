@@ -8,10 +8,10 @@
 
 import Foundation
 
-protocol JSendService: Service where Client == JSendAPIClient { }
+public protocol JSendService: Service where Client == JSendAPIClient { }
 
-extension JSendService {
-    func decode<T: Decodable>(_ type: T.Type, from data: Data) -> (instance: T?, error: Error?) {
+public extension JSendService {
+    public func decode<T: Decodable>(_ type: T.Type, from data: Data) -> (instance: T?, error: Error?) {
         do {
             let decoder = JSONDecoder()
             
@@ -32,7 +32,7 @@ extension JSendService {
         }
     }
     
-    func decode<T: Decodable>(_ type: T.Type, from result: APIResult) -> (instance: T?, error: Error?) {
+    public func decode<T: Decodable>(_ type: T.Type, from result: APIResult) -> (instance: T?, error: Error?) {
         switch result {
         case .success(let data):
             guard let data = data else {
@@ -44,11 +44,11 @@ extension JSendService {
         }
     }
     
-    func decodeResource(from result: APIResult) -> (instance: PrimaryResource?, error: Error?) {
+    public func decodeResource(from result: APIResult) -> (instance: PrimaryResource?, error: Error?) {
         return decode(PrimaryResource.self, from: result)
     }
     
-    func getError(from result: APIResult) -> Error? {
+    public func getError(from result: APIResult) -> Error? {
         switch result {
         case .success(_):
             return nil
