@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:NetworkKit_iOS.xcodeproj">
+      location = "self:/Users/nik/Documents/Developer/Swift/NetworkKit_iOS/NetworkKit.xcodeproj">
    </FileRef>
 </Workspace>
