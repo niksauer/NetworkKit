@@ -8,53 +8,72 @@
 
 import Foundation
 
-public typealias JSON = [String: Any]
-
-public enum APIResult {
-    case success(Data?)
-    case failure(Error)
-}
-
-public protocol APIConfiguration {
-    var hostname: String { get }
-    var port: Int? { get }
-    var credentials: APICredentialStore? { get }
-}
-
-public protocol APICredentialStore {
-    func getUserID() -> Int?
-    func setUserID(_ userID: Int?) throws
-    func getToken() -> String?
-    func setToken(_ token: String?) throws
-    func reset() throws
-}
-
 public protocol APIClient {
+    
+    // MARK: - Properties
     var hostname: String { get }
     var port: Int? { get }
     var basePath: String? { get }
     var credentials: APICredentialStore? { get }
-    var session: URLSession { get }
     
+    var session: URLSession { get }
+    var encoding: BodyEncoding { get }
+    
+    // MARK: - Initialization
     init(hostname: String, port: Int?, basePath: String?, credentials: APICredentialStore?)
     
-    func makeGETRequest(to path: String?, params: JSON?, completion: @escaping (APIResult) -> Void)
-    func makePOSTRequest<T: Encodable>(to path: String?, params: JSON?, body: T, completion: @escaping (APIResult) -> Void) throws
-    func makePUTRequest<T: Encodable>(to path: String?, params: JSON?, body: T, completion: @escaping (APIResult) -> Void) throws
-    func makeDELETERequest(to path: String?, params: JSON?, completion: @escaping (APIResult) -> Void)
+    // MARK: - Methods
+    func makeGETRequest(to path: String?, params: [String: Any]?, completion: @escaping (APIResult) -> Void)
+    func makePOSTRequest<T: Encodable>(to path: String?, params: [String: Any]?, body: T, completion: @escaping (APIResult) -> Void) throws
+    func makePUTRequest<T: Encodable>(to path: String?, params: [String: Any]?, body: T, completion: @escaping (APIResult) -> Void) throws
+    func makeDELETERequest(to path: String?, params: [String: Any]?, completion: @escaping (APIResult) -> Void)
+    
     func uploadMultipart(name: String, filename: String, data: Data, to path: String?, method: HTTPMethod, completion: @escaping (APIResult) -> Void) throws
     
     func executeSessionDataTask(request: URLRequest, completion: @escaping (APIResult) -> Void)
     func processSessionDataTask(data: Data?, response: URLResponse?, error: Error?) -> APIResult
+
 }
 
 public extension APIClient {
+    
+    // MARK: - Properties
+    public var baseURL: String {
+        return "http://\(hostname):\(port ?? 80)\(basePath != nil ? "/\(basePath!)" : "")"
+    }
+    
+    // MARK: - Initialization
     public init(config: APIConfiguration, basePath: String?) {
         self.init(hostname: config.hostname, port: config.port, basePath: basePath, credentials: config.credentials)
     }
     
-    public var baseURL: String {
-        return "http://\(hostname):\(port ?? 80)\(basePath != nil ? "/\(basePath!)" : "")"
+    // MARK: - Methods
+    public func makeGETRequest(to path: String? = nil, params: [String: Any]? = nil, completion: @escaping (APIResult) -> Void) {
+        let url = URL(baseURL: baseURL, path: path, params: params)
+        let request = URLRequest(url: url, method: .get)
+        
+        executeSessionDataTask(request: request, completion: completion)
+    }
+    
+    public func makePOSTRequest<T: Encodable>(to path: String? = nil, params: [String: Any]? = nil, body: T, completion: @escaping (APIResult) -> Void) throws {
+        let url = URL(baseURL: baseURL, path: path, params: nil)
+        let request = try URLRequest(url: url, method: .post, body: body, encoding: encoding)
+        
+        executeSessionDataTask(request: request, completion: completion)
+    }
+    
+    public func makePUTRequest<T: Encodable>(to path: String? = nil, params: [String: Any]? = nil, body: T, completion: @escaping (APIResult) -> Void) throws {
+        let url = URL(baseURL: baseURL, path: path, params: nil)
+        let request = try URLRequest(url: url, method: .put, body: body, encoding: encoding)
+        
+        executeSessionDataTask(request: request, completion: completion)
+    }
+    
+    public func makeDELETERequest(to path: String? = nil, params: [String: Any]? = nil, completion: @escaping (APIResult) -> Void) {
+        let url = URL(baseURL: baseURL, path: path, params: nil)
+        let request = URLRequest(url: url, method: .delete)
+        
+        executeSessionDataTask(request: request, completion: completion)
     }
     
     /// https://stackoverflow.com/questions/29623187/upload-image-with-multipart-form-data-ios-in-swift
@@ -108,6 +127,7 @@ public extension APIClient {
         }
     }
     
+    /// only support 'Bearer' authentication scheme (see RFC 6750)
     public func executeSessionDataTask(request: URLRequest, completion: @escaping (APIResult) -> Void) {
         var request = request
         
@@ -126,6 +146,7 @@ public extension APIClient {
         
         task.resume()
     }
+
 }
 
 

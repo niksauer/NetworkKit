@@ -12,12 +12,11 @@ public protocol Service {
     associatedtype PrimaryResource: Decodable
     associatedtype Client: APIClient
     var client: Client { get }
-    init(hostname: String, port: Int, credentials: APICredentialStore?)
-    init(config: APIConfiguration)
+    init(hostname: String, port: Int?, credentials: APICredentialStore?)
 }
 
 public extension Service {
     public init(config: APIConfiguration) {
-        self.init(hostname: config.hostname, port: config.port ?? 80, credentials: config.credentials)
+        self.init(hostname: config.hostname, port: config.port, credentials: config.credentials)
     }
 }
