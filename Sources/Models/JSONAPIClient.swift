@@ -18,18 +18,21 @@ public class JSONAPIClient: APIClient {
     
     public let session = URLSession(configuration: .default)
     public let encoding: BodyEncoding
-    
+    public let useTLS: Bool
+
     // MARK: - Initialization
-    public required init(hostname: String, port: Int?, basePath: String?, credentials: APICredentialStore?) {
+    public required init(hostname: String, port: Int?, basePath: String?, credentials: APICredentialStore?, useTLS: Bool) {
         self.hostname = hostname
         self.port = port
         self.basePath = basePath
         self.credentials = credentials
         self.encoding = .JSON
+        self.useTLS = useTLS
     }
     
     // MARK: - Public Methods
     public func processSessionDataTask(data: Data?, response: URLResponse?, error: Error?) -> APIResult {
+        print(data, response, error)
         fatalError()
 //        let result: APIResult
 //

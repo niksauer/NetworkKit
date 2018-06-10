@@ -19,8 +19,10 @@ public protocol APIClient {
     var session: URLSession { get }
     var encoding: BodyEncoding { get }
     
+    var useTLS: Bool { get }
+    
     // MARK: - Initialization
-    init(hostname: String, port: Int?, basePath: String?, credentials: APICredentialStore?)
+    init(hostname: String, port: Int?, basePath: String?, credentials: APICredentialStore?, useTLS: Bool)
     
     // MARK: - Methods
     func makeGETRequest(to path: String?, params: [String: Any]?, completion: @escaping (APIResult) -> Void)
@@ -39,12 +41,12 @@ public extension APIClient {
     
     // MARK: - Properties
     public var baseURL: String {
-        return "http://\(hostname):\(port ?? 80)\(basePath != nil ? "/\(basePath!)" : "")"
+        return "\(useTLS ? "https" : "http")://\(hostname):\(port ?? 80)\(basePath != nil ? "/\(basePath!)" : "")"
     }
     
     // MARK: - Initialization
-    public init(config: APIConfiguration, basePath: String?) {
-        self.init(hostname: config.hostname, port: config.port, basePath: basePath, credentials: config.credentials)
+    public init(config: APIConfiguration, basePath: String?, useTLS: Bool) {
+        self.init(hostname: config.hostname, port: config.port, basePath: basePath, credentials: config.credentials, useTLS: useTLS)
     }
     
     // MARK: - Methods
