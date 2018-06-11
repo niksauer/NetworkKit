@@ -9,7 +9,6 @@
 import Foundation
 
 public protocol Service {
-    associatedtype PrimaryResource: Decodable
     associatedtype Client: APIClient
     var client: Client { get }
     init(hostname: String, port: Int?, credentials: APICredentialStore?)

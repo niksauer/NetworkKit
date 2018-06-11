@@ -32,7 +32,6 @@ public class JSONAPIClient: APIClient {
     
     // MARK: - Public Methods
     public func processSessionDataTask(data: Data?, response: URLResponse?, error: Error?) -> APIResult {
-        print(data, response, error)
         fatalError()
 //        let result: APIResult
 //

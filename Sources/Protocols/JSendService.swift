@@ -8,7 +8,9 @@
 
 import Foundation
 
-public protocol JSendService: Service where Client == JSendAPIClient { }
+public protocol JSendService: Service where Client == JSendAPIClient {
+    associatedtype PrimaryResource: Decodable
+}
 
 public extension JSendService {
     public func decode<T: Decodable>(_ type: T.Type, from data: Data) -> (instance: T?, error: Error?) {

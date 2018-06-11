@@ -18,7 +18,6 @@ public protocol APIClient {
     
     var session: URLSession { get }
     var encoding: BodyEncoding { get }
-    
     var useTLS: Bool { get }
     
     // MARK: - Initialization
