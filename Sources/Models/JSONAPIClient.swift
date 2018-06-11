@@ -30,28 +30,27 @@ public class JSONAPIClient: APIClient {
     
     // MARK: - Public Methods
     public func processSessionDataTask(data: Data?, response: URLResponse?, error: Error?) -> APIResult {
-        fatalError()
-//        let result: APIResult
-//
-//        guard error == nil else {
-//            return APIResult.failure(error!)
-//        }
-//
-//        if let data = data {
-//            do {
-//                guard let _ = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-//                    throw JSONAPIError.invalidData
-//                }
-//
-//                result = APIResult.success(data)
-//            } catch {
-//                result = APIResult.failure(error)
-//            }
-//        } else {
-//            result = APIResult.failure(error!)
-//        }
-//
-//        return result
+        guard error == nil else {
+            return APIResult.failure(error!)
+        }
+        
+        let result: APIResult
+
+        if let data = data {
+            do {
+                guard let _ = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                    throw JSONAPIError.invalidData
+                }
+                
+                result = APIResult.success(data)
+            } catch {
+                result = APIResult.failure(error)
+            }
+        } else {
+            result = APIResult.failure(error!)
+        }
+
+        return result
     }
     
 }

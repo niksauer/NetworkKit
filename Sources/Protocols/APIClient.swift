@@ -39,7 +39,7 @@ public extension APIClient {
     
     // MARK: - Properties
     public var baseURL: String {
-        return "\(hostURL):\(port ?? 80)\(basePath != nil ? "/\(basePath!)" : "")"
+        return "\(hostURL):\(port != nil ? "\(port!)" : "")\(basePath != nil ? "/\(basePath!)" : "")"
     }
     
     // MARK: - Initialization
@@ -52,13 +52,15 @@ public extension APIClient {
         let url = URL(baseURL: baseURL, path: path, params: params)
         let request = URLRequest(url: url, method: .get)
         
+        print(request)
+        
         executeSessionDataTask(request: request, completion: completion)
     }
     
     public func makePOSTRequest<T: Encodable>(to path: String? = nil, params: [String: Any]? = nil, body: T, completion: @escaping (APIResult) -> Void) throws {
         let url = URL(baseURL: baseURL, path: path, params: nil)
         let request = try URLRequest(url: url, method: .post, body: body, encoding: encoding)
-        
+    
         executeSessionDataTask(request: request, completion: completion)
     }
     

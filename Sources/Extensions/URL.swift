@@ -11,14 +11,16 @@ import Foundation
 public extension URL {
     public init(baseURL: String, path: String?, params: [String: Any]?) {
         var components = URLComponents(string: "\(baseURL)\(path ?? "")")!
-        
+    
         if let params = params {
+            components.queryItems = [URLQueryItem]()
+            
             for (key, value) in params {
                 let queryItem = URLQueryItem(name: key, value: String(describing: value))
                 components.queryItems?.append(queryItem)
             }
         }
-        
+    
         self = components.url!
     }
 }
