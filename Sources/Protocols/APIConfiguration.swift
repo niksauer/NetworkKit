@@ -9,7 +9,7 @@
 import Foundation
 
 public protocol APIConfiguration {
-    var hostname: String { get }
+    var hostURL: String { get }
     var port: Int? { get }
     var credentials: APICredentialStore? { get }
 }

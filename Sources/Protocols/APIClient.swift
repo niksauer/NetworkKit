@@ -11,17 +11,16 @@ import Foundation
 public protocol APIClient {
     
     // MARK: - Properties
-    var hostname: String { get }
+    var hostURL: String { get }
     var port: Int? { get }
     var basePath: String? { get }
     var credentials: APICredentialStore? { get }
     
     var session: URLSession { get }
     var encoding: BodyEncoding { get }
-    var useTLS: Bool { get }
     
     // MARK: - Initialization
-    init(hostname: String, port: Int?, basePath: String?, credentials: APICredentialStore?, useTLS: Bool)
+    init(hostURL: String, port: Int?, basePath: String?, credentials: APICredentialStore?)
     
     // MARK: - Methods
     func makeGETRequest(to path: String?, params: [String: Any]?, completion: @escaping (APIResult) -> Void)
@@ -40,12 +39,12 @@ public extension APIClient {
     
     // MARK: - Properties
     public var baseURL: String {
-        return "\(useTLS ? "https" : "http")://\(hostname):\(port ?? 80)\(basePath != nil ? "/\(basePath!)" : "")"
+        return "\(hostURL):\(port ?? 80)\(basePath != nil ? "/\(basePath!)" : "")"
     }
     
     // MARK: - Initialization
-    public init(config: APIConfiguration, basePath: String?, useTLS: Bool) {
-        self.init(hostname: config.hostname, port: config.port, basePath: basePath, credentials: config.credentials, useTLS: useTLS)
+    public init(config: APIConfiguration, basePath: String?) {
+        self.init(hostURL: config.hostURL, port: config.port, basePath: basePath, credentials: config.credentials)
     }
     
     // MARK: - Methods
@@ -149,5 +148,4 @@ public extension APIClient {
     }
 
 }
-
 

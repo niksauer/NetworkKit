@@ -11,23 +11,21 @@ import Foundation
 public class JSONAPIClient: APIClient {
     
     // MARK: - Public Properties
-    public let hostname: String
+    public let hostURL: String
     public let port: Int?
     public let basePath: String?
     public let credentials: APICredentialStore?
     
     public let session = URLSession(configuration: .default)
     public let encoding: BodyEncoding
-    public let useTLS: Bool
-
+    
     // MARK: - Initialization
-    public required init(hostname: String, port: Int?, basePath: String?, credentials: APICredentialStore?, useTLS: Bool) {
-        self.hostname = hostname
+    public required init(hostURL: String, port: Int?, basePath: String?, credentials: APICredentialStore?) {
+        self.hostURL = hostURL
         self.port = port
         self.basePath = basePath
         self.credentials = credentials
         self.encoding = .JSON
-        self.useTLS = useTLS
     }
     
     // MARK: - Public Methods

@@ -11,11 +11,11 @@ import Foundation
 public protocol Service {
     associatedtype Client: APIClient
     var client: Client { get }
-    init(hostname: String, port: Int?, credentials: APICredentialStore?)
+    init(hostURL: String, port: Int?, credentials: APICredentialStore?)
 }
 
 public extension Service {
     public init(config: APIConfiguration) {
-        self.init(hostname: config.hostname, port: config.port, credentials: config.credentials)
+        self.init(hostURL: config.hostURL, port: config.port, credentials: config.credentials)
     }
 }
