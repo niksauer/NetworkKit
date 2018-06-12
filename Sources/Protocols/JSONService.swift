@@ -35,15 +35,6 @@ public extension JSONService {
         }
     }
     
-    public func getError(from result: APIResult) -> Error? {
-        switch result {
-        case .success(_):
-            return nil
-        case .failure(let error):
-            return error
-        }
-    }
-    
     private func decode<T: Decodable>(_ type: T.Type, from data: Data) -> (instance: T?, error: Error?) {
         do {
             let decoder = JSONDecoder()
