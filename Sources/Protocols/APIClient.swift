@@ -51,7 +51,7 @@ public extension APIClient {
     public func makeGETRequest(to path: String? = nil, params: [String: Any]? = nil, completion: @escaping (APIResult) -> Void) {
         let url = URL(baseURL: baseURL, path: path, params: params)
         let request = URLRequest(url: url, method: .get)
-            
+        
         executeSessionDataTask(request: request, completion: completion)
     }
     

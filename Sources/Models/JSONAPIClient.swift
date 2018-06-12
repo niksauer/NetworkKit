@@ -38,7 +38,7 @@ public class JSONAPIClient: APIClient {
 
         if let data = data {
             do {
-                guard let _ = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
+                guard let _ = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {                    
                     throw JSONAPIError.invalidData
                 }
                 
