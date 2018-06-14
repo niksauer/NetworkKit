@@ -19,6 +19,10 @@ public extension Service {
         self.init(hostURL: config.hostURL, port: config.port, credentials: config.credentials)
     }
     
+    public init(hostURL: String) {
+        self.init(hostURL: hostURL, port: nil, credentials: nil)
+    }
+    
     public func getError(from result: APIResult) -> Error? {
         switch result {
         case .success(_):

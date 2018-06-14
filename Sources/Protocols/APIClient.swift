@@ -39,10 +39,14 @@ public extension APIClient {
     
     // MARK: - Properties
     public var baseURL: String {
-        return "\(hostURL):\(port != nil ? "\(port!)" : "")\(basePath != nil ? "/\(basePath!)" : "")"
+        return "\(hostURL)\(port != nil ? ":\(port!)" : "")\(basePath != nil ? "/\(basePath!)" : "")"
     }
     
     // MARK: - Initialization
+    public init(hostURL: String, basePath: String?) {
+        self.init(hostURL: hostURL, port: nil, basePath: basePath, credentials: nil)
+    }
+    
     public init(config: APIConfiguration, basePath: String?) {
         self.init(hostURL: config.hostURL, port: config.port, basePath: basePath, credentials: config.credentials)
     }
@@ -51,7 +55,7 @@ public extension APIClient {
     public func makeGETRequest(to path: String? = nil, params: [String: Any]? = nil, completion: @escaping (APIResult) -> Void) {
         let url = URL(baseURL: baseURL, path: path, params: params)
         let request = URLRequest(url: url, method: .get)
-                
+            
         executeSessionDataTask(request: request, completion: completion)
     }
     

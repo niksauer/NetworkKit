@@ -10,7 +10,24 @@ import Foundation
 
 public extension URL {
     public init(baseURL: String, path: String?, params: [String: Any]?) {
-        var components = URLComponents(string: "\(baseURL)\(path ?? "")")!
+        var newBaseURL = baseURL
+        var newPath = path
+        
+        if baseURL.last == "/" {
+            newBaseURL = String(baseURL.dropLast())
+        }
+    
+        if let path = path, path.starts(with: "/") {
+            newPath = String(path.dropFirst())
+        }
+        
+        var components: URLComponents
+        
+        if let path = newPath {
+            components = URLComponents(string: "\(newBaseURL)/\(path)")!
+        } else {
+            components = URLComponents(string: "\(newBaseURL)")!
+        }
     
         if let params = params {
             components.queryItems = [URLQueryItem]()
